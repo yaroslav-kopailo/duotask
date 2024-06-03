@@ -10,7 +10,9 @@ class TaskModel {
   final String id;
   final String title;
   final String status;
+  @JsonKey(name: 'start_date')
   final DateTime startDate;
+  @JsonKey(name: 'finish_date')
   final DateTime finishDate;
   @JsonKey(
     fromJson: TaskModel.fromSubtaskJsonList,

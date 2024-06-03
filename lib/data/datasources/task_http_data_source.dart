@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:duotask/core/error/exceptions.dart';
-import 'package:duotask/core/network/mock_request.dart';
+import 'package:duotask/core/helper/type_aliases.dart';
+import 'package:duotask/core/network/mock_client.dart';
 import 'package:duotask/core/storage/json_locale_storage.dart';
 import 'package:duotask/data/models/default_response_model.dart';
 import 'package:duotask/data/models/task_model.dart';
@@ -16,6 +17,8 @@ abstract class TaskHttpDataSource {
   Future<bool> deleteTask(String taskId);
 
   Future<Task> updateTask(Task task);
+
+  Future<bool> reorderTask(int oldIndex, int newIndex);
 }
 
 class MockTaskHttpDataSourceImpl with MockClient implements TaskHttpDataSource {
@@ -40,7 +43,7 @@ class MockTaskHttpDataSourceImpl with MockClient implements TaskHttpDataSource {
       throw ApiException(statusCode: resp.statusCode, message: resp.body);
     }
 
-    final tasks = jsonDecode(resp.body)
+    final List<Task> tasks = List.castFrom<dynamic, Json>(jsonDecode(resp.body))
         .map((json) => TaskModel.fromJson(json).toTask())
         .toList();
 
@@ -114,5 +117,28 @@ class MockTaskHttpDataSourceImpl with MockClient implements TaskHttpDataSource {
     ).toTask();
 
     return updatedTask;
+  }
+
+  @override
+  Future<bool> reorderTask(int oldIndex, int newIndex) async {
+    final resp = await mockRequest(
+      authToken: _authToken,
+      request: () async {
+        // Simulate deleting task
+        final data = await JsonLocaleStorage.loadDefaultResponseData();
+
+        return http.Response(data, 200);
+      },
+    );
+
+    if (resp.statusCode != 200) {
+      throw ApiException(statusCode: resp.statusCode, message: resp.body);
+    }
+
+    final responseModel = DefaultResponseModel.fromJson(
+      jsonDecode(resp.body),
+    );
+
+    return responseModel.success;
   }
 }

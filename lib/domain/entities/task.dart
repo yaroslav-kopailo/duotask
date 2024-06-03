@@ -35,9 +35,15 @@ enum TaskStatusType {
 
   String toJson() => id;
 
-  List<String> get ids => TaskStatusType.values
+  static List<String> get ids => TaskStatusType.values
       .map(
         (type) => type.id,
+      )
+      .toList();
+
+  static List<String> get names => TaskStatusType.values
+      .map(
+        (type) => type.name,
       )
       .toList();
 

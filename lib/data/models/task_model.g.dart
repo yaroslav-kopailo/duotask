@@ -10,8 +10,8 @@ TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
       id: json['id'] as String,
       title: json['title'] as String,
       status: json['status'] as String,
-      startDate: DateTime.parse(json['startDate'] as String),
-      finishDate: DateTime.parse(json['finishDate'] as String),
+      startDate: DateTime.parse(json['start_date'] as String),
+      finishDate: DateTime.parse(json['finish_date'] as String),
       subtasks: TaskModel.fromSubtaskJsonList(json['subtasks'] as List),
     );
 
@@ -19,7 +19,7 @@ Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'status': instance.status,
-      'startDate': instance.startDate.toIso8601String(),
-      'finishDate': instance.finishDate.toIso8601String(),
+      'start_date': instance.startDate.toIso8601String(),
+      'finish_date': instance.finishDate.toIso8601String(),
       'subtasks': TaskModel.toSubtaskJsonList(instance.subtasks),
     };
