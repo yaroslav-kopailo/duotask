@@ -22,17 +22,17 @@ class RootScreenState extends State<RootScreen> {
   }
 
   /// Shows a bottom sheet with customizable behavior and appearance.
-  void showBottomSheet({
+  Future<T?> showBottomSheet<T>({
     required BuildContext context,
     required Widget bottomSheet,
     VoidCallback? onDismiss,
     bool isDismissible = false,
     bool enableDrag = false,
     bool useRootNavigator = true,
-  }) {
+  }) async {
     final orientation = MediaQuery.of(context).orientation;
     final size = MediaQuery.of(context).size;
-    showModalBottomSheet(
+    return await showModalBottomSheet<T>(
       context: context,
       backgroundColor: Colors.transparent,
       useRootNavigator: useRootNavigator,

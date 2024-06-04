@@ -1,13 +1,18 @@
 import 'package:duotask/core/obs/observable_list_controller.dart';
+import 'package:duotask/domain/entities/subtask.dart';
 import 'package:duotask/domain/entities/task.dart';
 import 'package:duotask/domain/repositories/task_list_repository.dart';
+import 'package:duotask/presentation/view_models/new_task_view_model.dart';
 import 'package:mobx/mobx.dart';
+import 'package:uuid/uuid.dart';
 
 class TaskListViewModel {
   TaskListViewModel({required TaskListRepository taskListRepository})
       : _taskListRepository = taskListRepository {
     setupTasksList();
   }
+
+  static const _uuid = Uuid();
 
   final TaskListRepository _taskListRepository;
 
@@ -16,6 +21,8 @@ class TaskListViewModel {
     defaultValue: [],
     equalityChecker: (task1, task2) => task1.id == task2.id,
   );
+
+  final Observable<NewTaskViewModel> newTask = Observable(NewTaskViewModel());
 
   final Observable<String> selectedTaskStatusTypeName = Observable('All');
 
@@ -47,7 +54,43 @@ class TaskListViewModel {
     setupTasksList();
   }
 
-  void addNewTask(Task task) {
+  void startCreatingNewTask() {
+    runInAction(() {
+      newTask.value = NewTaskViewModel();
+    });
+  }
+
+  void _checkFields() {
+    runInAction(() {
+      if (newTask.value.isTaskNameFieldValid.value == false) {
+        newTask.value.isTaskNameFailed.value = true;
+        newTask.value.taskNameFailedText.value = 'Use at least 5 characters';
+      }
+    });
+  }
+
+  void addNewTask() {
+    _checkFields();
+    if (newTask.value.isTaskNameFailed.value == true) {
+      return;
+    }
+
+    final taskId = _uuid.v4();
+    final task = Task(
+      id: taskId,
+      title: newTask.value.taskName.value,
+      status: Observable(TaskStatusType.toDo),
+      startDate: newTask.value.startDateTime.value,
+      finishDate: newTask.value.endDateTime.value,
+      subtasks: [
+        Subtask(
+          id: '$taskId-${_uuid.v4()}',
+          text: newTask.value.taskName.value,
+          done: Observable(false),
+        ),
+      ],
+    );
+
     tasksListController.executeAddItem(
       item: task,
       request: () async {

@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:duotask/core/helper/asset_paths.dart';
 import 'package:duotask/core/style/app_theme.dart';
 import 'package:duotask/domain/entities/task.dart';
+import 'package:duotask/presentation/base_widgets/bottom_sheets/confirmation_delete_bottom_sheet.dart';
 import 'package:duotask/presentation/base_widgets/buttons/outlined_svg_icon_button.dart';
 import 'package:duotask/presentation/base_widgets/icons/svg_icon.dart';
 import 'package:duotask/presentation/view_models/task_list_view_model.dart';
+import 'package:duotask/presentation/views/root_screen/root_screen.dart';
 import 'package:duotask/presentation/views/tasks_screen/widgets/task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -67,6 +69,28 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
     );
   }
 
+  Future<void> _onRemoveTask(
+      {required Task task, required Function(bool) closeItemHandler}) async {
+    await RootScreenState.of(context).showBottomSheet(
+        context: context,
+        isDismissible: true,
+        enableDrag: true,
+        onDismiss: () {
+          if (mounted) closeItemHandler(false);
+        },
+        bottomSheet: ConfirmationDeleteBottomSheet(
+          onConfirm: () async {
+            if (mounted) {
+              await closeItemHandler(true);
+              _taskListViewModel.removeTask(task);
+            }
+          },
+          onCancel: () {
+            if (mounted) closeItemHandler(false);
+          },
+        ));
+  }
+
   void _scrollToEnd({bool withAnimation = false}) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
@@ -102,15 +126,12 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
 
   @override
   Widget build(BuildContext context) {
-    final taskListViewModel =
-        Provider.of<TaskListViewModel>(context, listen: false);
-
     return MultiReactionBuilder(
       builders: [
         ReactionBuilder(
           builder: (context) {
             return reaction(
-              (_) => taskListViewModel.filteredTasks.value,
+              (_) => _taskListViewModel.filteredTasks.value,
               _updateTasks,
             );
           },
@@ -118,7 +139,7 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
         ReactionBuilder(
           builder: (context) {
             return reaction(
-              (_) => taskListViewModel.selectedTaskStatusTypeName.value,
+              (_) => _taskListViewModel.selectedTaskStatusTypeName.value,
               (_) => _scrollToEnd(withAnimation: true),
             );
           },
@@ -126,7 +147,7 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
         ReactionBuilder(
           builder: (context) {
             return reaction(
-              (_) => taskListViewModel
+              (_) => _taskListViewModel
                   .tasksListController.requestSetList.isFulfilled.value,
               (isFulfilled) => _scrollToEnd(withAnimation: true),
             );
@@ -135,7 +156,7 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
         ReactionBuilder(
           builder: (context) {
             return reaction(
-              (_) => taskListViewModel
+              (_) => _taskListViewModel
                   .tasksListController.requestAddItem.isPending.value,
               (isPending) => _scrollToEnd(withAnimation: true),
             );
@@ -145,6 +166,7 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
       child: CustomScrollView(
         shrinkWrap: true,
         reverse: true,
+        physics: const ClampingScrollPhysics(),
         controller: _scrollController,
         slivers: <Widget>[
           const SliverToBoxAdapter(
@@ -175,8 +197,10 @@ class _TasksReorderableListState extends State<TasksReorderableList> {
                         height: 52,
                       ),
                       onTap: (handler) async {
-                        await handler(true);
-                        taskListViewModel.removeTask(task);
+                        await _onRemoveTask(
+                          task: task,
+                          closeItemHandler: handler,
+                        );
                       },
                       color: Colors.transparent,
                     ),

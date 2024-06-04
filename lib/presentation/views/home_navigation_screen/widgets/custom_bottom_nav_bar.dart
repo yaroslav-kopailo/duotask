@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:duotask/core/helper/asset_paths.dart';
 import 'package:duotask/core/style/app_theme.dart';
 import 'package:duotask/presentation/base_widgets/buttons/custom_elevated_button.dart';
@@ -18,8 +20,12 @@ class CBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 98.0,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.only(
+        left: 18,
+        right: 18,
+        top: 18,
+        bottom: max(12, MediaQuery.of(context).viewPadding.bottom),
+      ),
       decoration: BoxDecoration(
         color: themeOf(context).surfaceContainerHighestColor,
         boxShadow: const [
@@ -28,7 +34,7 @@ class CBottomNavBar extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildNavItem(context, Assets.home, 0),
           _buildNavItem(context, Assets.calendar, 1),

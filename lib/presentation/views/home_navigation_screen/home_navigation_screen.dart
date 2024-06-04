@@ -1,39 +1,81 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:duotask/core/helper/asset_paths.dart';
+import 'package:duotask/core/style/app_theme.dart';
+import 'package:duotask/injection_container.dart';
+import 'package:duotask/presentation/base_widgets/bottom_sheets/create_task_bottom_sheet.dart';
+import 'package:duotask/presentation/base_widgets/toasts/custom_toasts.dart';
+import 'package:duotask/presentation/view_models/task_list_view_model.dart';
 import 'package:duotask/presentation/views/home_navigation_screen/widgets/custom_bottom_nav_bar.dart';
+import 'package:duotask/presentation/views/root_screen/root_screen.dart';
 import 'package:duotask/router/router.gr.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class HomeNavigationScreen extends StatefulWidget {
   const HomeNavigationScreen({super.key});
 
   @override
-  State<HomeNavigationScreen> createState() => _HomeNavigationScreenState();
+  State<HomeNavigationScreen> createState() => HomeNavigationScreenState();
 }
 
-class _HomeNavigationScreenState extends State<HomeNavigationScreen> {
+class HomeNavigationScreenState extends State<HomeNavigationScreen> {
+  static HomeNavigationScreenState of(BuildContext context) {
+    return context.findAncestorStateOfType<HomeNavigationScreenState>()!;
+  }
+
+  late final _taskListViewModel = sl<TaskListViewModel>();
+
+  Future<void> onCreateTask() async {
+    _taskListViewModel.startCreatingNewTask();
+    await RootScreenState.of(context).showBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      onDismiss: () {},
+      bottomSheet: CreateTaskBottomSheet(
+        taskListViewModel: _taskListViewModel,
+        onCreateTask: _taskListViewModel.addNewTask,
+      ),
+    );
+  }
+
+  void showSuccessToast({required String text}) {
+    CustomToasts.showSecondaryToast(
+      context: context,
+      text: text,
+      iconPath: Assets.checkCircle,
+      iconColor: themeOf(context).greenSuccessColor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AutoTabsRouter(
-      curve: Curves.easeInOut,
-      duration: const Duration(milliseconds: 500),
-      routes: [
-        TasksRoute(),
-        TasksRoute(),
-        TasksRoute(),
+    return MultiProvider(
+      providers: [
+        Provider<TaskListViewModel>(create: (context) => _taskListViewModel),
       ],
-      lazyLoad: true,
-      builder: (context, child) {
-        final tabsRouter = AutoTabsRouter.of(context);
-        return Scaffold(
-          body: child,
-          extendBody: true,
-          bottomNavigationBar: CBottomNavBar(
-            onAddTaskPressed: () {},
-            onTabSelected: (index) {},
-          ),
-        );
-      },
+      child: AutoTabsRouter(
+        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 500),
+        routes: [
+          TasksRoute(),
+          TasksRoute(),
+          TasksRoute(),
+        ],
+        lazyLoad: true,
+        builder: (context, child) {
+          final tabsRouter = AutoTabsRouter.of(context);
+          return Scaffold(
+            body: child,
+            extendBody: true,
+            bottomNavigationBar: CBottomNavBar(
+              onAddTaskPressed: onCreateTask,
+              onTabSelected: (index) {},
+            ),
+          );
+        },
+      ),
     );
   }
 }
