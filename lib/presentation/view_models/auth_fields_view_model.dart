@@ -2,8 +2,8 @@ import 'package:duotask/core/helper/string_ext.dart';
 import 'package:duotask/core/util/validator_base.dart';
 import 'package:mobx/mobx.dart';
 
-class ObservableAuthFieldsController {
-  ObservableAuthFieldsController({
+class AuthFieldsViewModel {
+  AuthFieldsViewModel({
     this.refreshRequestFailedWithEmail = false,
     this.refreshRequestFailedWithPassword = false,
   });

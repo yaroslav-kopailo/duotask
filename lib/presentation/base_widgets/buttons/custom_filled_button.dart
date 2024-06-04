@@ -14,7 +14,7 @@ class CFilledButton extends StatelessWidget {
     this.enabled = true,
     this.isLoading = false,
     this.width = double.infinity,
-    this.height = 66,
+    this.height = 56,
     this.borderRadius = 10,
   });
 
@@ -56,6 +56,8 @@ class CFilledButton extends StatelessWidget {
     Key? key,
     required Widget child,
     required VoidCallback onPressed,
+    double height = 56,
+    double? width,
     bool enabled = true,
     bool isLoading = false,
     EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 20),
@@ -63,8 +65,8 @@ class CFilledButton extends StatelessWidget {
     return CFilledButton(
       key: key,
       onPressed: onPressed,
-      height: 40,
-      width: 160,
+      height: height,
+      width: width,
       padding: padding,
       borderRadius: 10,
       enabled: enabled,
@@ -86,6 +88,7 @@ class CFilledButton extends StatelessWidget {
       return Size.fromWidth(width!);
     }
   }
+
   final Widget child;
   final VoidCallback onPressed;
   final bool enabled;
@@ -132,17 +135,13 @@ class CFilledButton extends StatelessWidget {
           ),
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Visibility(
-            visible: isLoading == false,
-            replacement: _CFilledButtonLoader(
-              size: constraints.minHeight / 2.5,
-              foregroundColor: disabledForegroundColor,
-            ),
-            child: child,
-          );
-        },
+      child: Visibility(
+        visible: isLoading == false,
+        replacement: _CFilledButtonLoader(
+          size: (height ?? 56) / 2.5,
+          foregroundColor: disabledForegroundColor,
+        ),
+        child: child,
       ),
     );
   }

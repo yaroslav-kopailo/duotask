@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:duotask/core/error/failures.dart';
-import 'package:duotask/core/obs/observable_auth_fields_controller.dart';
 import 'package:duotask/core/obs/observable_request.dart';
 import 'package:duotask/domain/repositories/auth_repository.dart';
 import 'package:duotask/domain/repositories/token_repository.dart';
+import 'package:duotask/presentation/view_models/auth_fields_view_model.dart';
 import 'package:mobx/mobx.dart';
 
 class AuthViewModel {
@@ -17,7 +17,7 @@ class AuthViewModel {
   final AuthRepository _authRepository;
   final TokenRepository _tokenRepository;
 
-  final fields = ObservableAuthFieldsController(
+  final fields = AuthFieldsViewModel(
     refreshRequestFailedWithEmail: true,
     refreshRequestFailedWithPassword: true,
   );

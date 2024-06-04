@@ -29,13 +29,17 @@ class AppTheme extends BaseTheme {
 
   Color get surfaceContainerColor => const Color(0xffF3F3F6);
 
-  Color get surfaceContainerLowestColor => const Color(0xffF3F3F6);
+  Color get surfaceContainerLowestColor => const Color(0xffffffff);
 
   Color get surfaceContainerHighestColor => const Color(0xffffffff);
 
   Color get onSurfaceColor => const Color(0xFF3B3A63);
 
+  Color get onSurfaceAlternateColor => const Color(0xFF808088);
+
   Color get outlineColor => const Color(0xFF3B3A63).withOpacity(0.3);
+
+  Color get outlineAlternateColor => const Color(0xFF808088);
 
   Color get dividerColor => const Color(0xffC4C4D0);
 
@@ -57,6 +61,10 @@ class AppTheme extends BaseTheme {
         color: onBackgroundColor,
       );
 
+  TextStyle get h5OnSurfaceStyle => RobotoTypography.h5.copyWith(
+        color: onSurfaceColor,
+      );
+
   TextStyle get h6OnBackgroundStyle => RobotoTypography.h6.copyWith(
         color: onBackgroundColor,
       );
@@ -72,6 +80,16 @@ class AppTheme extends BaseTheme {
 
   TextStyle get body1OnBackgroundStyle => RobotoTypography.body1.copyWith(
         color: onBackgroundColor,
+        fontWeight: FontWeight.w400,
+      );
+
+  TextStyle get body1OnSurfaceStyle => RobotoTypography.body1.copyWith(
+        color: onSurfaceColor,
+        fontWeight: FontWeight.w400,
+      );
+
+  TextStyle get hint1OnSurfaceStyle => RobotoTypography.body1.copyWith(
+        color: onSurfaceColor.withOpacity(0.6),
         fontWeight: FontWeight.w400,
       );
 
@@ -95,6 +113,13 @@ class AppTheme extends BaseTheme {
   TextStyle get buttonOnPrimaryActionStyle => RobotoTypography.button.copyWith(
         color: onPrimaryActionColor,
       );
+
+  TextStyle get buttonOnAccentStyle => RobotoTypography.button.copyWith(
+        color: onAccentColor,
+      );
+
+  TextStyle get buttonOnSurfaceAlternateStyle =>
+      RobotoTypography.button.copyWith(color: onSurfaceAlternateColor);
 
   TextStyle get caption1OnAccentStyle => RobotoTypography.caption1.copyWith(
         color: onAccentColor,

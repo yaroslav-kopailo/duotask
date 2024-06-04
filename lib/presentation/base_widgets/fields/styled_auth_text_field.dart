@@ -77,14 +77,14 @@ class _StyledAuthTextFieldState extends State<StyledAuthTextField> {
     // if (widget.isFieldFailed) {
     //   return ts.s13.w400.failed(context);
     // }
-    return widget.style ?? themeOf(context).body2OnSurfaceStyle;
+    return widget.style ?? themeOf(context).body1OnSurfaceStyle;
   }
 
   TextStyle get dynamicHintTextStyle {
     // if (widget.isFieldFailed) {
     //   return ts.s13.w400.failed(context);
     // }
-    return widget.hintStyle ?? themeOf(context).hint2OnSurfaceStyle;
+    return widget.hintStyle ?? themeOf(context).hint1OnSurfaceStyle;
   }
 
   @override

@@ -18,7 +18,12 @@ class BottomSheetBody extends StatelessWidget {
     return KeyboardDismissOnTap(
       child: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.fromLTRB(8, 0, 8, 24),
+          margin: EdgeInsets.fromLTRB(
+            16,
+            0,
+            16,
+            24 + MediaQuery.of(context).viewInsets.bottom,
+          ),
           padding: contentPadding,
           decoration: BoxDecoration(
             color: Colors.white,

@@ -30,9 +30,9 @@ class RobotoTypography {
   );
 
   static final TextStyle h5 = _textStyle.copyWith(
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w700,
     fontSize: 24,
-    letterSpacing: 0,
+    letterSpacing: 0.5,
   );
 
   static final TextStyle h6 = _textStyle.copyWith(

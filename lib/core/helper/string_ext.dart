@@ -27,7 +27,7 @@ extension AuthTextExt on String {
 
   bool get isValidPasswordLength => length >= 8;
 
-  bool get isNotValidCountryNameLength => length < 3;
+  bool get isValidTaskNameLength => length >= 5;
 
   bool get isNotValidZipcodeLength => length < 3;
 

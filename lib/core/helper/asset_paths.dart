@@ -9,6 +9,7 @@ class Assets {
   static const String check = "assets/icons/check.svg";
   static const String checkCircle = "assets/icons/check_circle.svg";
   static const String checkCorrectMark = "assets/icons/check_correct_mark.svg";
+  static const String close = "assets/icons/close.svg";
   static const String closeCircle = "assets/icons/close_circle.svg";
   static const String defaultResponseJson = "assets/default_response_json.json";
   static const String dragLines = "assets/icons/drag_lines.svg";
