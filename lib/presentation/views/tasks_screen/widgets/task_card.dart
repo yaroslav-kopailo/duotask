@@ -71,6 +71,7 @@ class TaskCard extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 8),
           TaskStatusLabel(status: status),
         ],
       ),

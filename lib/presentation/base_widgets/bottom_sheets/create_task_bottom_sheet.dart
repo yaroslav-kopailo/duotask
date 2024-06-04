@@ -33,8 +33,13 @@ class CreateTaskBottomSheet extends StatelessWidget {
           builder: (context) {
             return reaction(
               (_) => _taskListViewModel
-                  .tasksListController.requestAddItem.isFulfilled.value,
-              (isFulfilled) => closeBottomSheet(),
+                  .tasksListController.requestAddItem.status.value,
+              (status) {
+                if (status == FutureStatus.rejected ||
+                    status == FutureStatus.fulfilled) {
+                  closeBottomSheet();
+                }
+              },
             );
           },
         ),

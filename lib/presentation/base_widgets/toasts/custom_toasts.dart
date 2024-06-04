@@ -8,7 +8,9 @@ class CustomToasts {
     required String text,
     required String iconPath,
     required Color iconColor,
-  }) {
+    Duration delayed = const Duration(milliseconds: 600),
+  }) async {
+    await Future.delayed(delayed);
     final snackBar = SnackBar(
       duration: const Duration(seconds: 3),
       content: Row(
